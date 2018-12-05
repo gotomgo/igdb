@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/Henry-Sarabia/igdb"
+	"github.com/gotomgo/igdb"
 )
 
 var key string
