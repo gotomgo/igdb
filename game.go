@@ -158,6 +158,26 @@ func (gs *GameService) List(ids []int, opts ...FuncOption) ([]*Game, error) {
 	return g, nil
 }
 
+func (gs *GameService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	startURL, err := gs.client.paginatedURL(GameEndpoint, limit, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewPagination(gs.client, startURL, limit), nil
+}
+
+func (gs *GameService) GetPaginated(p *Pagination) ([]*Game, bool, error) {
+	var g []*Game
+
+	moreItems, err := p.Get(&g)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return g, moreItems, nil
+}
+
 // Search returns a list of Games found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Games are found using the provided query, an error is returned.

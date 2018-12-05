@@ -58,6 +58,14 @@ func (gms *GameModeService) List(ids []int, opts ...FuncOption) ([]*GameMode, er
 	return gm, nil
 }
 
+// Enum returns an index of GameModes based solely on the provided  options.
+//
+//	Notes
+//		This is a short-hand form of List(nil,opts)
+func (gms *GameModeService) Enum(opts ...FuncOption) ([]*GameMode, error) {
+	return gms.List(nil, opts...)
+}
+
 // Search returns a list of GameModes found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no GameModes are found using the provided query, an error is returned.

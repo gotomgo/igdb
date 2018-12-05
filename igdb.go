@@ -3,6 +3,7 @@ package igdb
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -10,7 +11,7 @@ import (
 )
 
 // igdbURL is the base URL for the IGDB API.
-const igdbURL string = "https://api-2445582011268.apicast.io/"
+const igdbURL string = "https://api-endpoint.igdb.com/"
 
 // Errors returned when creating URLs for API calls.
 var (
@@ -39,6 +40,7 @@ type Client struct {
 	http    *http.Client
 	rootURL string
 	key     string
+	isPro   bool
 
 	common service
 
@@ -68,20 +70,31 @@ type Client struct {
 	Versions     *VersionService
 }
 
-// NewClient returns a new Client configured to communicate with the IGDB.
-// The provided apiKey will be used to make requests on your behalf. The
-// provided HTTP Client will be the client making requests to the IGDB.
-// If no HTTP Client is provided, a default HTTP client is used instead.
+// NewClientEx returns a new Client configured to communicate with the IGDB.
 //
-// If you need an IGDB API key, please visit: https://api.igdb.com/signup
-func NewClient(apiKey string, custom *http.Client) *Client {
+//	Notes
+//		The provided apiKey will be used to make requests on your behalf. The
+//		provided HTTP Client will be the client making requests to the IGDB.
+//		If no HTTP Client is provided, a default HTTP client is used instead.
+//
+//		The isPro parameter can be used with pro subscriptions to use limit
+//		values up to 3000.
+//
+//		If you need an IGDB API key, please visit: https://api.igdb.com/signup
+func NewClientEx(apiKey string, isPro bool, custom *http.Client) *Client {
 	if custom == nil {
 		custom = http.DefaultClient
 	}
 	c := &Client{}
 	c.http = custom
 	c.key = apiKey
-	c.rootURL = igdbURL
+	c.isPro = isPro
+
+	if isPro {
+		c.rootURL = fmt.Sprintf("%spro/", igdbURL)
+	} else {
+		c.rootURL = igdbURL
+	}
 
 	c.common.client = c
 	c.Characters = (*CharacterService)(&c.common)
@@ -111,37 +124,83 @@ func NewClient(apiKey string, custom *http.Client) *Client {
 	return c
 }
 
-// get sends a GET request to the provided url and stores
+// NewClient returns a new Client configured to communicate with the IGDB.
+//
+//	Notes
+//		The provided apiKey will be used to make requests on your behalf. The
+//		provided HTTP Client will be the client making requests to the IGDB.
+//		If no HTTP Client is provided, a default HTTP client is used instead.
+//
+//		The isPro parameter is specified as false
+//
+//		If you need an IGDB API key, please visit: https://api.igdb.com/signup
+//
+func NewClient(apiKey string, custom *http.Client) *Client {
+	return NewClientEx(apiKey, false, custom)
+}
+
+// getgetWithCallback sends a GET request to the provided url and stores
 // the response in the provided result empty interface.
-// The response will be checked and return any errors.
-func (c *Client) get(url string, result interface{}) error {
+//
+//	Notes
+//		The response will be checked and return any errors.
+//
+//		If callback is specified, it will be invoked with the http Response
+//		prior to reading the body of the response. Note, the callback should
+//		not read the body, but is free to access other response info such
+//		as the headers
+//
+func (c *Client) getBody(url string, callback func(resp *http.Response) error) ([]byte, error) {
 	req, err := c.newRequest(url)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
+
+	if callback != nil {
+		err = callback(resp)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	defer resp.Body.Close()
 
 	if err = checkResponse(resp); err != nil {
-		return err
+		return nil, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err = checkResults(b); err != nil {
-		return err
+		return nil, err
 	}
 
-	err = json.Unmarshal(b, &result)
+	return b, nil
+}
+
+func (c *Client) getWithCallback(url string, callback func(resp *http.Response) error, result interface{}) (err error) {
+	var body []byte
+
+	if body, err = c.getBody(url, callback); err == nil {
+		err = json.Unmarshal(body, &result)
+	}
 
 	return err
+}
+
+// get sends a GET request to the provided url and stores
+// the response in the provided result empty interface.
+// The response will be checked and return any errors.
+func (c *Client) get(url string, result interface{}) error {
+	return c.getWithCallback(url, nil, result)
 }
 
 // newRequest configures a new request for the provided URL and
@@ -195,6 +254,35 @@ func (c *Client) multiURL(end endpoint, IDs []int, opts ...FuncOption) (string, 
 	url = encodeURL(&opt.Values, url)
 
 	return url, nil
+}
+
+// paginatedURL creates a URL configured to request IDGB objects using the
+// provided options, and to use pagination
+func (c *Client) paginatedURL(end endpoint, limit int, opts ...FuncOption) (string, error) {
+	opt, err := newOpt(opts...)
+	if err != nil {
+		return "", err
+	}
+
+	// overwrite any limit option already specified
+	opt.Values.Set("limit", fmt.Sprintf("%d", limit))
+	// set the scroll param
+	opt.Values.Set("scroll", "1")
+
+	url := c.rootURL + string(end)
+	url = encodeURL(&opt.Values, url)
+
+	return url, nil
+}
+
+// enumURL creates a URL configured to retrieve an index of IGDB objects from
+// the given endpoint based solely on the provided options
+//
+//	Notes
+//		This is a short-hand form of multiUrl(end,nil,opts)
+//
+func (c *Client) enumURL(end endpoint, opts ...FuncOption) (string, error) {
+	return c.multiURL(end, nil, opts...)
 }
 
 // searchURL creates a URL configured to search the IGDB based on the given query using
