@@ -151,6 +151,7 @@ func NewClient(apiKey string, custom *http.Client) *Client {
 //		as the headers
 //
 func (c *Client) getBody(url string, callback func(resp *http.Response) error) ([]byte, error) {
+	fmt.Println(url)
 	req, err := c.newRequest(url)
 	if err != nil {
 		return nil, err

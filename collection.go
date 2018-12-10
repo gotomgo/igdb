@@ -58,6 +58,21 @@ func (cs *CollectionService) List(ids []int, opts ...FuncOption) ([]*Collection,
 	return col, nil
 }
 
+func (cs *CollectionService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(cs.client, CollectionEndpoint, limit, opts...)
+}
+
+func (cs *CollectionService) GetPaginated(p *Pagination) ([]*Collection, bool, error) {
+	var c []*Collection
+
+	moreItems, err := p.Get(&c)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return c, moreItems, nil
+}
+
 // Search returns a list of Collections found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Collections are found using the provided query, an error is returned.

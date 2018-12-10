@@ -61,6 +61,21 @@ func (es *EngineService) List(ids []int, opts ...FuncOption) ([]*Engine, error) 
 	return eng, nil
 }
 
+func (es *EngineService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(es.client, EngineEndpoint, limit, opts...)
+}
+
+func (es *EngineService) GetPaginated(p *Pagination) ([]*Engine, bool, error) {
+	var e []*Engine
+
+	moreItems, err := p.Get(&e)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return e, moreItems, nil
+}
+
 // Search returns a list of Engines found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Engines are found using the provided query, an error is returned.

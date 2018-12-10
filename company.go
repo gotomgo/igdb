@@ -72,6 +72,21 @@ func (cs *CompanyService) List(ids []int, opts ...FuncOption) ([]*Company, error
 	return com, nil
 }
 
+func (cs *CompanyService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(cs.client, CompanyEndpoint, limit, opts...)
+}
+
+func (cs *CompanyService) GetPaginated(p *Pagination) ([]*Company, bool, error) {
+	var c []*Company
+
+	moreItems, err := p.Get(&c)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return c, moreItems, nil
+}
+
 // Search returns a list of Companies found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Companies are found using the provided query, an error is returned.

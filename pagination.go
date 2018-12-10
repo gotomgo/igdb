@@ -1,6 +1,7 @@
 package igdb
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -16,6 +17,15 @@ type Pagination struct {
 	itemCount  int
 	totalRead  int
 	totalPages int
+}
+
+func NewPaginationForEndpoint(client *Client, endpoint endpoint, limit int, opts ...FuncOption) (*Pagination, error) {
+	startURL, err := client.paginatedURL(endpoint, limit, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewPagination(client, startURL, limit), nil
 }
 
 func NewPagination(client *Client, startURL string, limit int) *Pagination {
@@ -58,17 +68,25 @@ func (p *Pagination) updateTotalRead(result interface{}) bool {
 	if rv.Kind() == reflect.Slice {
 		p.totalRead += rv.Len()
 	} else {
-		panic(fmt.Errorf("Result type not slice, it is => %v", reflect.TypeOf(rv).Kind()))
+		p.totalRead += p.limit
+		if p.totalRead > p.itemCount {
+			p.totalRead = p.itemCount
+		}
+
+		// panic(fmt.Errorf("Result type not slice, it is => %v", reflect.TypeOf(rv).Kind()))
 	}
 
 	return p.HasRemainingItems()
 }
 
-func (p *Pagination) start(result interface{}) (moreItems bool, err error) {
-	err = p.client.getWithCallback(p.startURL, func(resp *http.Response) error {
+func (p *Pagination) start() (body []byte, err error) {
+	// on the 1st request we expect the x-next-page header, and an x-count header
+	body, err = p.client.getBody(p.startURL, func(resp *http.Response) error {
+		// the pagination query never changes and is good for about 3 minutes
+		// (each call thru the query resets the timer)
 		p.pageQuery = resp.Header.Get("x-next-page")
-		fmt.Println(p.pageQuery)
 
+		// We get the total count of the items to be paged
 		itemCount, err2 := strconv.ParseInt(resp.Header.Get("x-count"), 10, 32)
 		if err2 != nil {
 			return err2
@@ -77,32 +95,60 @@ func (p *Pagination) start(result interface{}) (moreItems bool, err error) {
 		p.setItemCount(int(itemCount))
 
 		return nil
-	}, result)
-
-	if err == nil {
-		moreItems = p.updateTotalRead(result)
-		// fmt.Printf("itemCount: %d,totalRead: %d\n", p.itemCount, p.totalRead)
-	}
+	})
 
 	return
 }
 
 func (p *Pagination) Get(result interface{}) (moreItems bool, err error) {
+	// convet the []byte by marshaling it as JSON
+	result, moreItems, err = p.GetWithCallback(func(b []byte) interface{} {
+		err = json.Unmarshal(b, &result)
+		return result
+	})
+
+	return
+}
+
+func (p *Pagination) GetRaw() (result []byte, moreItems bool, err error) {
+	var temp interface{}
+
+	// by not specifying a callback, the result is an []byte
+	temp, moreItems, err = p.GetWithCallback(nil)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return temp.([]byte), moreItems, nil
+}
+
+func (p *Pagination) GetWithCallback(callback func(body []byte) interface{}) (result interface{}, moreItems bool, err error) {
+	var body []byte
+
 	if len(p.pageQuery) == 0 {
-		moreItems, err = p.start(result)
+		body, err = p.start()
 	} else {
 		if p.HasRemainingItems() {
 			// rootUrl contains trailing '/', pageQuery starts with '/'.
 			// Remove one of them
 			pageURL := fmt.Sprintf("%s%s", p.client.rootURL, p.pageQuery[1:])
-			if err = p.client.get(pageURL, result); err == nil {
-				moreItems = p.updateTotalRead(result)
-				// fmt.Printf("itemCount: %d,totalRead: %d\n", p.itemCount, p.totalRead)
-			}
+			body, err = p.client.getBody(pageURL, nil)
 		} else {
 			err = ErrNoResults
 		}
 	}
+
+	if err != nil {
+		return nil, false, err
+	}
+
+	if callback != nil {
+		result = callback(body)
+	} else {
+		result = body
+	}
+
+	moreItems = p.updateTotalRead(result)
 
 	return
 }

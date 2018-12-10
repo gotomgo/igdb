@@ -58,6 +58,21 @@ func (ts *ThemeService) List(ids []int, opts ...FuncOption) ([]*Theme, error) {
 	return th, nil
 }
 
+func (ts *ThemeService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(ts.client, ThemeEndpoint, limit, opts...)
+}
+
+func (ts *ThemeService) GetPaginated(p *Pagination) ([]*Theme, bool, error) {
+	var f []*Theme
+
+	moreItems, err := p.Get(&f)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return f, moreItems, nil
+}
+
 // Search returns a list of Themes found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Themes are found using the provided query, an error is returned.

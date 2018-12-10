@@ -58,12 +58,19 @@ func (gms *GameModeService) List(ids []int, opts ...FuncOption) ([]*GameMode, er
 	return gm, nil
 }
 
-// Enum returns an index of GameModes based solely on the provided  options.
-//
-//	Notes
-//		This is a short-hand form of List(nil,opts)
-func (gms *GameModeService) Enum(opts ...FuncOption) ([]*GameMode, error) {
-	return gms.List(nil, opts...)
+func (gms *GameModeService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(gms.client, GameModeEndpoint, limit, opts...)
+}
+
+func (gms *GameModeService) GetPaginated(p *Pagination) ([]*GameMode, bool, error) {
+	var gm []*GameMode
+
+	moreItems, err := p.Get(&gm)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return gm, moreItems, nil
 }
 
 // Search returns a list of GameModes found by searching the IGDB using the provided

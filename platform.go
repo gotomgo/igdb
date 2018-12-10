@@ -107,6 +107,21 @@ func (ps *PlatformService) List(ids []int, opts ...FuncOption) ([]*Platform, err
 	return p, nil
 }
 
+func (ps *PlatformService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(ps.client, PlatformEndpoint, limit, opts...)
+}
+
+func (ps *PlatformService) GetPaginated(p *Pagination) ([]*Platform, bool, error) {
+	var platforms []*Platform
+
+	moreItems, err := p.Get(&platforms)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return platforms, moreItems, nil
+}
+
 // Search returns a list of Platforms found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Platforms are found using the provided query, an error is returned.

@@ -58,6 +58,21 @@ func (ps *PerspectiveService) List(ids []int, opts ...FuncOption) ([]*Perspectiv
 	return p, nil
 }
 
+func (ps *PerspectiveService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(ps.client, PerspectiveEndpoint, limit, opts...)
+}
+
+func (*PerspectiveService) GetPaginated(p *Pagination) ([]*Perspective, bool, error) {
+	var perspectives []*Perspective
+
+	moreItems, err := p.Get(&perspectives)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return perspectives, moreItems, nil
+}
+
 // Search returns a list of Perspectives found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Perspectives are found using the provided query, an error is returned.

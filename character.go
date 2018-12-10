@@ -64,6 +64,21 @@ func (cs *CharacterService) List(ids []int, opts ...FuncOption) ([]*Character, e
 	return ch, nil
 }
 
+func (cs *CharacterService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(cs.client, CharacterEndpoint, limit, opts...)
+}
+
+func (cs *CharacterService) GetPaginated(p *Pagination) ([]*Character, bool, error) {
+	var c []*Character
+
+	moreItems, err := p.Get(&c)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return c, moreItems, nil
+}
+
 // Search returns a list of Characters found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Characters are found using the provided query, an error is returned.

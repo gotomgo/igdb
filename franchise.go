@@ -58,6 +58,26 @@ func (fs *FranchiseService) List(ids []int, opts ...FuncOption) ([]*Franchise, e
 	return f, nil
 }
 
+func (fs *FranchiseService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	startURL, err := fs.client.paginatedURL(FranchiseEndpoint, limit, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewPagination(fs.client, startURL, limit), nil
+}
+
+func (fs *FranchiseService) GetPaginated(p *Pagination) ([]*Franchise, bool, error) {
+	var f []*Franchise
+
+	moreItems, err := p.Get(&f)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return f, moreItems, nil
+}
+
 // Search returns a list of Franchises found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Franchises are found using the provided query, an error is returned.

@@ -59,6 +59,21 @@ func (ks *KeywordService) List(ids []int, opts ...FuncOption) ([]*Keyword, error
 	return kw, nil
 }
 
+func (ks *KeywordService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(ks.client, KeywordEndpoint, limit, opts...)
+}
+
+func (ks *KeywordService) GetPaginated(p *Pagination) ([]*Keyword, bool, error) {
+	var k []*Keyword
+
+	moreItems, err := p.Get(&k)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return k, moreItems, nil
+}
+
 // Search returns a list of Keywords found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Keywords are found using the provided query, an error is returned.

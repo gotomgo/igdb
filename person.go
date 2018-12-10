@@ -79,6 +79,21 @@ func (ps *PersonService) List(ids []int, opts ...FuncOption) ([]*Person, error) 
 	return p, nil
 }
 
+func (ps *PersonService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(ps.client, PersonEndpoint, limit, opts...)
+}
+
+func (ps *PersonService) GetPaginated(p *Pagination) ([]*Person, bool, error) {
+	var people []*Person
+
+	moreItems, err := p.Get(&people)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return people, moreItems, nil
+}
+
 // Search returns a list of People found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no People are found using the provided query, an error is returned.

@@ -58,6 +58,21 @@ func (gs *GenreService) List(ids []int, opts ...FuncOption) ([]*Genre, error) {
 	return g, nil
 }
 
+func (gs *GenreService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
+	return NewPaginationForEndpoint(gs.client, GenreEndpoint, limit, opts...)
+}
+
+func (gs *GenreService) GetPaginated(p *Pagination) ([]*Genre, bool, error) {
+	var g []*Genre
+
+	moreItems, err := p.Get(&g)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return g, moreItems, nil
+}
+
 // Search returns a list of Genres found by searching the IGDB using the provided
 // query. Provide functional options to sort, filter, and paginate the results. If
 // no Genres are found using the provided query, an error is returned.

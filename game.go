@@ -159,12 +159,7 @@ func (gs *GameService) List(ids []int, opts ...FuncOption) ([]*Game, error) {
 }
 
 func (gs *GameService) ListPaginated(limit int, opts ...FuncOption) (*Pagination, error) {
-	startURL, err := gs.client.paginatedURL(GameEndpoint, limit, opts...)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewPagination(gs.client, startURL, limit), nil
+	return NewPaginationForEndpoint(gs.client, GameEndpoint, limit, opts...)
 }
 
 func (gs *GameService) GetPaginated(p *Pagination) ([]*Game, bool, error) {
