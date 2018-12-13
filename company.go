@@ -10,26 +10,26 @@ type CompanyService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/company/
 type Company struct {
-	ID                 int          `json:"ID"`
-	Name               string       `json:"name"`
-	Slug               string       `json:"slug"`
-	URL                URL          `json:"url"`
-	CreatedAt          int          `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt          int          `json:"updated_at"` // Unix time in milliseconds
-	Logo               Image        `json:"logo"`
-	Description        string       `json:"description"`
-	Country            CountryCode  `json:"country"`
-	Website            string       `json:"website"`
-	StartDate          int          `json:"start_date"` // Unix time in milliseconds
-	StartDateCategory  DateCategory `json:"start_date_category"`
-	ChangedID          int          `json:"changed_company_id"`
-	ChangeDate         int          `json:"change_date"` // Unix time in milliseconds
-	ChangeDateCategory DateCategory `json:"change_date_category"`
-	Twitter            string       `json:"twitter"`
-	Published          []int        `json:"published"`
-	Developed          []int        `json:"developed"`
-	Parent             int          `json:"parent"`
-	Facebook           string       `json:"facebook"`
+	ID                 int          `json:"ID,omitempty"`
+	Name               string       `json:"name,omitempty"`
+	Slug               string       `json:"slug,omitempty"`
+	URL                URL          `json:"url,omitempty"`
+	CreatedAt          int          `json:"created_at,omitempty"` // Unix time in milliseconds
+	UpdatedAt          int          `json:"updated_at,omitempty"` // Unix time in milliseconds
+	Logo               Image        `json:"logo,omitempty"`
+	Description        string       `json:"description,omitempty"`
+	Country            CountryCode  `json:"country,omitempty"`
+	Website            string       `json:"website,omitempty"`
+	StartDate          int          `json:"start_date,omitempty"` // Unix time in milliseconds
+	StartDateCategory  DateCategory `json:"start_date_category,omitempty"`
+	ChangedID          int          `json:"changed_company_id,omitempty"`
+	ChangeDate         int          `json:"change_date,omitempty"` // Unix time in milliseconds
+	ChangeDateCategory DateCategory `json:"change_date_category,omitempty"`
+	Twitter            string       `json:"twitter,omitempty"`
+	Published          []int        `json:"published,omitempty"`
+	Developed          []int        `json:"developed,omitempty"`
+	Parent             int          `json:"parent,omitempty"`
+	Facebook           string       `json:"facebook,omitempty"`
 }
 
 // Get returns a single Company identified by the provided IGDB ID. Provide
