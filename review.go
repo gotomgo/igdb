@@ -9,14 +9,10 @@ type ReviewService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/review/
 type Review struct {
-	ID             int    `json:"id"`
+	BaseEntity
+
 	Username       string `json:"username"`
-	Name           string `json:"name"`
 	Title          string `json:"title"`
-	Slug           string `json:"slug"`
-	URL            URL    `json:"url"`
-	CreatedAt      int    `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt      int    `json:"updated_at"` // Unix time in milliseconds
 	Game           int    `json:"game"`
 	Category       int    `json:"category"` // Missing official documentation
 	Likes          int    `json:"likes"`

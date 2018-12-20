@@ -9,16 +9,12 @@ type EngineService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/game-engine/
 type Engine struct {
-	ID        int    `json:"id"`
-	Name      string `json:"name"`
-	Slug      string `json:"slug"`
-	URL       URL    `json:"url"`
-	CreatedAt int    `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt int    `json:"updated_at"` // Unix time in milliseconds
-	Logo      Image  `json:"logo"`
-	Games     []int  `json:"games"`
-	Companies []int  `json:"companies"`
-	Platforms []int  `json:"platforms"`
+	BaseEntity
+
+	Logo      Image `json:"logo"`
+	Games     []int `json:"games"`
+	Companies []int `json:"companies"`
+	Platforms []int `json:"platforms"`
 }
 
 // Get returns a single Engine identified by the provided IGDB ID. Provide

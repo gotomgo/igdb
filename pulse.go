@@ -9,15 +9,16 @@ type PulseService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/pulse/
 type Pulse struct {
-	ID          int          `json:"id"`
+	ID        int `json:"id"`
+	URL       URL `json:"url"`
+	CreatedAt int `json:"created_at"` // Unix time in milliseconds
+	UpdatedAt int `json:"updated_at"` // Unix time in milliseconds
+
 	PulseSource int          `json:"pulse_source"`
 	Category    int          `json:"category"`
 	Title       string       `json:"title"`
 	Summary     string       `json:"summary"`
-	URL         URL          `json:"url"`
 	UID         string       `json:"uid"`          //perhaps switch to ID
-	CreatedAt   int          `json:"created_at"`   // Unix time in milliseconds
-	UpdatedAt   int          `json:"updated_at"`   // Unix time in milliseconds
 	PublishedAt int          `json:"published_at"` // Unix time in milliseconds
 	ImageURL    URL          `json:"image"`
 	PulseImage  Image        `json:"pulse_image"`

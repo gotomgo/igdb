@@ -10,12 +10,8 @@ type CompanyService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/company/
 type Company struct {
-	ID                 int          `json:"ID,omitempty"`
-	Name               string       `json:"name,omitempty"`
-	Slug               string       `json:"slug,omitempty"`
-	URL                URL          `json:"url,omitempty"`
-	CreatedAt          int          `json:"created_at,omitempty"` // Unix time in milliseconds
-	UpdatedAt          int          `json:"updated_at,omitempty"` // Unix time in milliseconds
+	BaseEntity
+
 	Logo               Image        `json:"logo,omitempty"`
 	Description        string       `json:"description,omitempty"`
 	Country            CountryCode  `json:"country,omitempty"`

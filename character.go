@@ -9,12 +9,8 @@ type CharacterService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/character/
 type Character struct {
-	ID          int         `json:"id"`
-	Name        string      `json:"name"`
-	Slug        string      `json:"slug"`
-	URL         URL         `json:"url"`
-	CreatedAt   int         `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt   int         `json:"updated_at"` // Unix time in milliseconds
+	BaseEntity
+
 	Mugshot     Image       `json:"mug_shot"`
 	Gender      GenderCode  `json:"gender"`
 	CountryName string      `json:"country_name"`

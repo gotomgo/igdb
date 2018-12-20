@@ -9,17 +9,13 @@ type PulseGroupService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/pulse-group/
 type PulseGroup struct {
-	ID          int    `json:"id"`
-	Name        string `json:"name"`
-	Slug        string `json:"slug"`
-	URL         URL    `json:"url"`
-	CreatedAt   int    `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt   int    `json:"updated_at"` // Unix time in milliseconds
-	PublishedAt int    `json:"published_at"`
-	Category    int    `json:"category"`
-	Tags        []Tag  `json:"tags"`
-	Pulses      []int  `json:"pulses"`
-	Game        int    `json:"game"`
+	BaseEntity
+
+	PublishedAt int   `json:"published_at"`
+	Category    int   `json:"category"`
+	Tags        []Tag `json:"tags"`
+	Pulses      []int `json:"pulses"`
+	Game        int   `json:"game"`
 }
 
 // Get returns a single PulseGroup identified by the provided IGDB ID. Provide

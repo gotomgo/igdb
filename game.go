@@ -8,12 +8,8 @@ type GameService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/game/
 type Game struct {
-	ID                   int            `json:"id,omitempty"`
-	Name                 string         `json:"name,omitempty"`
-	Slug                 string         `json:"slug,omitempty"`
-	URL                  URL            `json:"url,omitempty"`
-	CreatedAt            int            `json:"created_at,omitempty"` // Unix time in milliseconds
-	UpdatedAt            int            `json:"updated_at,omitempty"` // Unix time in milliseconds
+	BaseEntity
+
 	Summary              string         `json:"summary,omitempty"`
 	Storyline            string         `json:"storyline,omitempty"`
 	Collection           int            `json:"collection,omitempty"`

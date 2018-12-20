@@ -9,12 +9,8 @@ type PageService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/page/
 type Page struct {
-	ID              int         `json:"id"`
-	Slug            string      `json:"slug"`
-	URL             URL         `json:"url"`
-	CreatedAt       int         `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt       int         `json:"updated_at"` // Unix time in milliseconds
-	Name            string      `json:"name"`
+	BaseEntity
+
 	Content         string      `json:"content"`
 	Category        int         `json:"category"`
 	Subcategory     int         `json:"sub_category"`

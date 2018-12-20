@@ -9,13 +9,9 @@ type PerspectiveService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/player-perspective/
 type Perspective struct {
-	ID        int    `json:"id"`
-	Name      string `json:"name"`
-	Slug      string `json:"slug"`
-	URL       URL    `json:"url"`
-	CreatedAt int    `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt int    `json:"updated_at"` // Unix time in milliseconds
-	Games     []int  `json:"games"`
+	BaseEntity
+
+	Games []int `json:"games"`
 }
 
 // Get returns a single Perspective identified by the provided IGDB ID. Provide

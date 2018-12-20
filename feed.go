@@ -10,12 +10,8 @@ type FeedService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/feed/
 type Feed struct {
-	ID          int          `json:"id"`
-	Name        string       `json:"name"`
-	URL         URL          `json:"url"`
-	Slug        string       `json:"slug"`
-	CreatedAt   int          `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt   int          `json:"updated_at"` // Unix time in milliseconds
+	BaseEntity
+
 	PublishedAt int          `json:"published_at"`
 	Content     string       `json:"content"`
 	Category    FeedCategory `json:"category"`

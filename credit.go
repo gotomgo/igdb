@@ -10,12 +10,8 @@ type CreditService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/credit/
 type Credit struct {
-	ID                    int            `json:"id"`
-	Name                  string         `json:"name"`
-	Slug                  string         `json:"slug"`
-	URL                   URL            `json:"url"`
-	CreatedAt             int            `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt             int            `json:"updated_at"` // Unix time in milliseconds
+	BaseEntity
+
 	Game                  int            `json:"game"`
 	Category              CreditCategory `json:"category"`
 	Company               int            `json:"company"`

@@ -9,12 +9,8 @@ type PersonService service
 //
 // For more information, visit: https://igdb.github.io/api/endpoints/person/
 type Person struct {
-	ID          int         `json:"id"`
-	Name        string      `json:"name"`
-	Slug        string      `json:"slug"`
-	URL         URL         `json:"url"`
-	CreatedAt   int         `json:"created_at"` // Unix time in milliseconds
-	UpdatedAt   int         `json:"updated_at"` // Unix time in milliseconds
+	BaseEntity
+
 	DOB         int         `json:"dob"`
 	Gender      GenderCode  `json:"gender"`
 	Country     CountryCode `json:"country"`
