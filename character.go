@@ -11,13 +11,16 @@ type CharacterService service
 type Character struct {
 	BaseEntity
 
-	Mugshot     Image       `json:"mug_shot"`
-	Gender      GenderCode  `json:"gender"`
-	CountryName string      `json:"country_name"`
-	AKAs        []string    `json:"akas"`
-	Species     SpeciesCode `json:"species"`
-	Games       []int       `json:"games"`
-	People      []int       `json:"people"`
+	Mugshot Image       `json:"mug_shot"`
+	Gender  GenderCode  `json:"gender"`
+	AKAs    []string    `json:"akas"`
+	Species SpeciesCode `json:"species"`
+	Games   []int       `json:"games"`
+	People  []int       `json:"people"`
+
+	// The following fields are never populated
+
+	CountryName string `json:"country_name"`
 }
 
 // Get returns a single Character identified by the provided IGDB ID. Provide

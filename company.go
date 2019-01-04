@@ -24,8 +24,10 @@ type Company struct {
 	Twitter            string       `json:"twitter,omitempty"`
 	Published          []int        `json:"published,omitempty"`
 	Developed          []int        `json:"developed,omitempty"`
-	Parent             int          `json:"parent,omitempty"`
-	Facebook           string       `json:"facebook,omitempty"`
+
+	// These fields are never populated
+	Parent   int    `json:"parent,omitempty"`
+	Facebook string `json:"facebook,omitempty"`
 }
 
 // Get returns a single Company identified by the provided IGDB ID. Provide

@@ -11,16 +11,19 @@ type PlatformService service
 type Platform struct {
 	BaseEntity
 
-	Shortcut      string            `json:"shortcut"`
-	Logo          Image             `json:"logo"`
-	Website       string            `json:"website"`
-	Summary       string            `json:"summary"`
-	AltName       string            `json:"alternative_name"`
-	Generation    int               `json:"generation"`
-	Category      int               `json:"category"`
-	ProductFamily int               `json:"product_family"`
-	Games         []int             `json:"games"`
-	Versions      []PlatformVersion `json:"versions"`
+	Logo       Image  `json:"logo"`
+	Website    string `json:"website"`
+	Summary    string `json:"summary"`
+	AltName    string `json:"alternative_name"`
+	Generation int    `json:"generation"`
+
+	// These fields are never populated
+	Shortcut      string `json:"shortcut"`
+	Category      int    `json:"category"`
+	ProductFamily int    `json:"product_family"`
+
+	Games    []int             `json:"games"`
+	Versions []PlatformVersion `json:"versions"`
 }
 
 // PlatformVersion contains information on an IGDB

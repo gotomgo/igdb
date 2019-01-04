@@ -20,14 +20,14 @@ func main() {
 		return
 	}
 
-	c := igdb.NewClientEx(key, true, nil)
+	c := igdb.NewClientEx(igdb.IgdbURL, key, true, nil)
 
 	var err error
 
 	// Retrieve PS4 inter-console exclusives
-	p, err := c.Platforms.ListPaginated(
+	p, err := c.Franchises.ListPaginated(
 		500,
-		igdb.SetFields("id", "name", "slug", "logo"),
+		igdb.SetFields("*"), // , "name", "slug", "logo"),
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -35,10 +35,10 @@ func main() {
 	}
 
 	moreItems := true
-	var platforms []*igdb.Platform
+	var platforms []*igdb.Franchise
 
 	for moreItems {
-		platforms, moreItems, err = c.Platforms.GetPaginated(p)
+		platforms, moreItems, err = c.Franchises.GetPaginated(p)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -46,16 +46,16 @@ func main() {
 
 		fmt.Println("Platforms:")
 		for _, v := range platforms {
-			var img string
-			var err error
+			// var img string
+			//var err error
 
-			img, err = v.Logo.SizedURL(igdb.SizeThumb, 2) // resize to largest image available
+			/*img, err = v.Logo.SizedURL(igdb.SizeThumb, 2) // resize to largest image available
 			if err != nil {
 				// fmt.Printf("image error for %s: %s\n", v.Name, err)
 				img = ""
-			}
+			}*/
 
-			fmt.Printf("ID=%d,Name=%s,Slug=%s,IMG=%s\n", v.ID, v.Name, v.Slug, img)
+			fmt.Printf("ID=%d,Name=%s,Slug=%s\n", v.ID, v.Name, v.Slug) /*, img) */
 		}
 	}
 

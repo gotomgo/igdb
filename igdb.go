@@ -10,8 +10,12 @@ import (
 	"strings"
 )
 
+// URL represents a URL as a string.
+type URL string
+
 // igdbURL is the base URL for the IGDB API.
 const igdbURL string = "https://api-endpoint.igdb.com/"
+const IgdbURL = igdbURL
 
 // Errors returned when creating URLs for API calls.
 var (
@@ -22,9 +26,6 @@ var (
 	// ErrNoResults occurs when the IGDB returns no results
 	ErrNoResults = errors.New("igdb.Client: no results")
 )
-
-// URL represents a URL as a string.
-type URL string
 
 // service is the underlying struct that handles
 // all API calls for different IGDB endpoints.
@@ -81,7 +82,7 @@ type Client struct {
 //		values up to 3000.
 //
 //		If you need an IGDB API key, please visit: https://api.igdb.com/signup
-func NewClientEx(apiKey string, isPro bool, custom *http.Client) *Client {
+func NewClientEx(apiURL string, apiKey string, isPro bool, custom *http.Client) *Client {
 	if custom == nil {
 		custom = http.DefaultClient
 	}
@@ -91,7 +92,7 @@ func NewClientEx(apiKey string, isPro bool, custom *http.Client) *Client {
 	c.isPro = isPro
 
 	if isPro {
-		c.rootURL = fmt.Sprintf("%spro/", igdbURL)
+		c.rootURL = fmt.Sprintf("%spro/", apiURL)
 	} else {
 		c.rootURL = igdbURL
 	}
@@ -136,7 +137,7 @@ func NewClientEx(apiKey string, isPro bool, custom *http.Client) *Client {
 //		If you need an IGDB API key, please visit: https://api.igdb.com/signup
 //
 func NewClient(apiKey string, custom *http.Client) *Client {
-	return NewClientEx(apiKey, false, custom)
+	return NewClientEx(igdbURL, apiKey, false, custom)
 }
 
 // getgetWithCallback sends a GET request to the provided url and stores
