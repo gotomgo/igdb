@@ -266,6 +266,16 @@ func (c *Client) paginatedURL(end endpoint, limit int, opts ...FuncOption) (stri
 		return "", err
 	}
 
+	if c.isPro {
+		if limit > 3000 {
+			limit = 3000
+		}
+	} else {
+		if limit > 50 {
+			limit = 50
+		}
+	}
+
 	// overwrite any limit option already specified
 	opt.Values.Set("limit", fmt.Sprintf("%d", limit))
 	// set the scroll param
