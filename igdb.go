@@ -140,6 +140,17 @@ func NewClient(apiKey string, custom *http.Client) *Client {
 	return NewClientEx(igdbURL, apiKey, false, custom)
 }
 
+// GetMaxLimit returns the maximum request limit for the account type
+func (c *Client) GetMaxLimit() (result int) {
+	if c.isPro {
+		result = 3000
+	} else {
+		result = 50
+	}
+
+	return
+}
+
 // getgetWithCallback sends a GET request to the provided url and stores
 // the response in the provided result empty interface.
 //
@@ -266,14 +277,8 @@ func (c *Client) paginatedURL(end endpoint, limit int, opts ...FuncOption) (stri
 		return "", err
 	}
 
-	if c.isPro {
-		if limit > 3000 {
-			limit = 3000
-		}
-	} else {
-		if limit > 50 {
-			limit = 50
-		}
+	if limit > c.GetMaxLimit() {
+		limit = c.GetMaxLimit()
 	}
 
 	// overwrite any limit option already specified
