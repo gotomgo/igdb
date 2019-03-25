@@ -62,6 +62,10 @@ func (p *Pagination) getPageCount(itemCount int) int {
 }
 
 func (p *Pagination) updateTotalRead(result interface{}) bool {
+	if result == nil {
+		return false
+	}
+
 	// result is a *[] of some sort, get the underlying elem which is the slice
 	rv := reflect.ValueOf(result).Elem()
 
@@ -86,13 +90,19 @@ func (p *Pagination) start() (body []byte, err error) {
 		// (each call thru the query resets the timer)
 		p.pageQuery = resp.Header.Get("x-next-page")
 
-		// We get the total count of the items to be paged
-		itemCount, err2 := strconv.ParseInt(resp.Header.Get("x-count"), 10, 32)
-		if err2 != nil {
-			return err2
-		}
+		xcount := resp.Header.Get("x-count")
 
-		p.setItemCount(int(itemCount))
+		if len(xcount) > 0 {
+			// We get the total count of the items to be paged
+			itemCount, err2 := strconv.ParseInt(xcount, 10, 32)
+			if err2 != nil {
+				return err2
+			}
+
+			p.setItemCount(int(itemCount))
+		} else {
+			p.setItemCount(0)
+		}
 
 		return nil
 	})
@@ -143,9 +153,13 @@ func (p *Pagination) GetWithCallback(callback func(body []byte) interface{}) (re
 	}
 
 	if callback != nil {
-		result = callback(body)
+		if len(body) > 0 {
+			result = callback(body)
+		}
 	} else {
-		result = body
+		if len(body) > 0 {
+			result = body
+		}
 	}
 
 	moreItems = p.updateTotalRead(result)
