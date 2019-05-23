@@ -107,6 +107,16 @@ func (p *Pagination) start() (body []byte, err error) {
 		return nil
 	})
 
+	// if the query results in 0 items (for example, a filter removes everything) then
+	// we end up with an ErrBadRequest with a (now lost) body value of "Reached the end of the scroll."
+	// and we want to avoid returning an error. The downside is, we are hiding all 400 errors that
+	// occur during start()
+	if err == ErrBadRequest {
+		p.setItemCount(0)
+		err = nil
+		body = []byte{}
+	}
+
 	return
 }
 
