@@ -113,7 +113,7 @@ func (p *Pagination) start() (body []byte, err error) {
 	// occur during start()
 	if err == ErrBadRequest {
 		p.setItemCount(0)
-		err = nil
+		err = ErrNoResults
 		body = []byte{}
 	}
 
@@ -153,9 +153,25 @@ func (p *Pagination) GetWithCallback(callback func(body []byte) interface{}) (re
 			// Remove one of them
 			pageURL := fmt.Sprintf("%s%s", p.client.rootURL, p.pageQuery[1:])
 			body, err = p.client.getBody(pageURL, nil)
+
+			// if the query results in 0 items (for example, a filter removes everything) then
+			// we end up with an ErrBadRequest with a (now lost) body value of "Reached the end of the scroll."
+			// and we want to avoid returning an error. The downside is, we are hiding all 400 errors that
+			// occur during start()
+			if err == ErrBadRequest {
+				p.setItemCount(0)
+				err = nil
+				body = []byte{}
+			}
+
+			err = ErrNoResults
 		} else {
 			err = ErrNoResults
 		}
+	}
+
+	if err == ErrNoResults {
+		return nil, false, nil
 	}
 
 	if err != nil {
