@@ -92,6 +92,8 @@ func (p *Pagination) start() (body []byte, err error) {
 
 		xcount := resp.Header.Get("x-count")
 
+		fmt.Printf("Pagination Query as %s results\n", xcount)
+
 		if len(xcount) > 0 {
 			// We get the total count of the items to be paged
 			itemCount, err2 := strconv.ParseInt(xcount, 10, 32)
@@ -160,11 +162,9 @@ func (p *Pagination) GetWithCallback(callback func(body []byte) interface{}) (re
 			// occur during start()
 			if err == ErrBadRequest {
 				p.setItemCount(0)
-				err = nil
+				err = ErrNoResults
 				body = []byte{}
 			}
-
-			err = ErrNoResults
 		} else {
 			err = ErrNoResults
 		}
