@@ -4,7 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/Henry-Sarabia/igdb"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/gotomgo/igdb"
 )
 
 var key string
@@ -47,6 +48,16 @@ func main() {
 	fmt.Println("USA -", USA)
 	fmt.Println("UK -", UK)
 	fmt.Println("Japan -", JP)
+
+	matches, err := c.Companies.List(nil, igdb.SetFields("*"), igdb.SetFilter("changed_company_id", igdb.OpGreaterThan, "0"))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, match := range matches {
+		spew.Dump(match)
+	}
 
 	return
 }
