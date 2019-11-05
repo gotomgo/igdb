@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct Game -add-tags json -w
@@ -11,7 +12,8 @@ import (
 // Game contains information on an IGDB entry for a particular video game.
 // For more information visit: https://api-docs.igdb.com/#game
 type Game struct {
-	ID                    int          `json:"id"`
+	BaseEntity
+
 	AgeRatings            []int        `json:"age_ratings"`
 	AggregatedRating      float64      `json:"aggregated_rating"`
 	AggregatedRatingCount int          `json:"aggregated_rating_count"`
@@ -21,7 +23,6 @@ type Game struct {
 	Category              GameCategory `json:"category"`
 	Collection            int          `json:"collection"`
 	Cover                 int          `json:"cover"`
-	CreatedAt             int          `json:"created_at"`
 	DLCS                  []int        `json:"dlcs"`
 	Expansions            []int        `json:"expansions"`
 	ExternalGames         []int        `json:"external_games"`
@@ -36,7 +37,6 @@ type Game struct {
 	InvolvedCompanies     []int        `json:"involved_companies"`
 	Keywords              []int        `json:"keywords"`
 	MultiplayerModes      []int        `json:"multiplayer_modes"`
-	Name                  string       `json:"name"`
 	ParentGame            int          `json:"parent_game"`
 	Platforms             []int        `json:"platforms"`
 	PlayerPerspectives    []int        `json:"player_perspectives"`
@@ -47,7 +47,6 @@ type Game struct {
 	ReleaseDates          []int        `json:"release_dates"`
 	Screenshots           []int        `json:"screenshots"`
 	SimilarGames          []int        `json:"similar_games"`
-	Slug                  string       `json:"slug"`
 	StandaloneExpansions  []int        `json:"standalone_expansions"`
 	Status                GameStatus   `json:"status"`
 	Storyline             string       `json:"storyline"`
@@ -57,8 +56,6 @@ type Game struct {
 	TimeToBeat            int          `json:"time_to_beat"`
 	TotalRating           float64      `json:"total_rating"`
 	TotalRatingCount      int          `json:"total_rating_count"`
-	UpdatedAt             int          `json:"updated_at"`
-	URL                   string       `json:"url"`
 	VersionParent         int          `json:"version_parent"`
 	VersionTitle          string       `json:"version_title"`
 	Videos                []int        `json:"videos"`

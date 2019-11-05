@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct Character -add-tags json -w
@@ -11,20 +12,16 @@ import (
 // Character represents a video game character.
 // For more information visit: https://api-docs.igdb.com/#character
 type Character struct {
-	ID          int              `json:"ID"`
+	BaseEntity
+
 	AKAS        []string         `json:"akas"`
 	CountryName string           `json:"country_name"`
-	CreatedAt   int              `json:"created_at"`
 	Description string           `json:"description"`
 	Games       []int            `json:"games"`
 	Gender      CharacterGender  `json:"gender"`
 	MugShot     int              `json:"mug_shot"`
-	Name        string           `json:"name"`
 	People      []int            `json:"people"`
-	Slug        string           `json:"slug"`
 	Species     CharacterSpecies `json:"species"`
-	UpdatedAt   int              `json:"updated_at"`
-	URL         string           `json:"url"`
 }
 
 // CharacterGender specifies a specific gender.

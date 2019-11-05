@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct TestDummy -add-tags json -w
@@ -11,23 +12,19 @@ import (
 // TestDummy represents a mocked IGDB object.
 // For more information visit: https://api-docs.igdb.com/#test-dummy
 type TestDummy struct {
-	ID              int           `json:"int"`
+	BaseEntity
+
 	BoolValue       bool          `json:"bool_value"`
-	CreatedAt       int           `json:"created_at"`
 	EnumTest        TestDummyEnum `json:"enum_test"`
 	FloatValue      float64       `json:"float_value"`
 	Game            int           `json:"game"`
 	IntegerArray    []int         `json:"integer_array"`
 	IntegerValue    int           `json:"integer_value"`
-	Name            string        `json:"name"`
 	NewIntegerValue int           `json:"new_integer_value"`
 	Private         bool          `json:"private"`
-	Slug            string        `json:"slug"`
 	StringArray     []string      `json:"string_array"`
 	TestDummies     []int         `json:"test_dummies"`
 	TestDummy       int           `json:"test_dummy"`
-	UpdatedAt       int           `json:"updated_at"`
-	URL             string        `json:"url"`
 	User            int           `json:"user"`
 }
 

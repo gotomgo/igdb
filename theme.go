@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct Theme -add-tags json -w
@@ -11,12 +12,7 @@ import (
 // Theme represents a particular video game theme.
 // For more information visit: https://api-docs.igdb.com/#theme
 type Theme struct {
-	ID        int    `json:"id"`
-	CreatedAt int    `json:"created_at"`
-	Name      string `json:"name"`
-	Slug      string `json:"slug"`
-	UpdatedAt int    `json:"updated_at"`
-	URL       string `json:"url"`
+	BaseEntity
 }
 
 // ThemeService handles all the API calls for the IGDB Theme endpoint.

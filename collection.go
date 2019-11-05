@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct Collection -add-tags json -w
@@ -11,12 +12,7 @@ import (
 // Collection represents a video game series.
 // For more information visit: https://api-docs.igdb.com/#collection
 type Collection struct {
-	ID        int    `json:"id"`
-	CreatedAt int    `json:"created_at"`
-	Name      string `json:"name"`
-	Slug      string `json:"slug"`
-	UpdatedAt int    `json:"updated_at"`
-	URL       string `json:"url"`
+	BaseEntity
 }
 
 // CollectionService handles all the API calls for the IGDB Collection endpoint.

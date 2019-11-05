@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct Person -add-tags json -w
@@ -11,23 +12,19 @@ import (
 // Person represents a person in the video game industry.
 // For more information visit: https://api-docs.igdb.com/#person
 type Person struct {
-	ID            int             `json:"id"`
+	BaseEntity
+
 	Bio           string          `json:"bio"`
 	Characters    []int           `json:"characters"`
 	Country       int             `json:"country"`
-	CreatedAt     int             `json:"created_at"`
 	CreditedGames []int           `json:"credited_games"`
 	Description   string          `json:"description"`
 	DOB           int             `json:"dob"`
 	Gender        CharacterGender `json:"gender"`
 	LovesCount    int             `json:"loves_count"`
 	MugShot       int             `json:"mug_shot"`
-	Name          string          `json:"name"`
 	Nicknames     []string        `json:"nicknames"`
 	Parent        int             `json:"parent"`
-	Slug          string          `json:"slug"`
-	UpdatedAt     int             `json:"updated_at"`
-	URL           string          `json:"url"`
 	VoiceActed    []int           `json:"voice_acted"`
 	Websites      []int           `json:"websites"`
 }

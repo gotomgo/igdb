@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct Keyword -add-tags json -w
@@ -12,11 +13,7 @@ import (
 // such as "World War 2" or "Steampunk".
 // For more information visit: https://api-docs.igdb.com/#keyword
 type Keyword struct {
-	CreatedAt int    `json:"created_at"`
-	Name      string `json:"name"`
-	Slug      string `json:"slug"`
-	UpdatedAt int    `json:"updated_at"`
-	Url       string `json:"url"`
+	BaseEntity
 }
 
 // KeywordService handles all the API calls for the IGDB Keyword endpoint.

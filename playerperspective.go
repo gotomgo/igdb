@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct PlayerPerspective -add-tags json -w
@@ -11,12 +12,7 @@ import (
 // PlayerPerspective describes the view or perspective of the player in a video game.
 // For more information visit: https://api-docs.igdb.com/#player-perspective
 type PlayerPerspective struct {
-	ID        int    `json:"id"`
-	CreatedAt int    `json:"created_at"`
-	Name      string `json:"name"`
-	Slug      string `json:"slug"`
-	UpdatedAt int    `json:"updated_at"`
-	URL       string `json:"url"`
+	BaseEntity
 }
 
 // PlayerPerspectiveService handles all the API calls for the IGDB PlayerPerspective endpoint.

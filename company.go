@@ -1,9 +1,10 @@
 package igdb
 
 import (
+	"strconv"
+
 	"github.com/Henry-Sarabia/sliceconv"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 //go:generate gomodifytags -file $GOFILE -struct Company -add-tags json -w
@@ -12,23 +13,19 @@ import (
 // This includes both publishers and developers.
 // For more information visit: https://api-docs.igdb.com/#company
 type Company struct {
-	ID                 int          `json:"id"`
+	BaseEntity
+
 	ChangeDate         int          `json:"change_date"`
 	ChangeDateCategory DateCategory `json:"change_date_category"`
 	ChangedCompanyID   int          `json:"changed_company_id"`
 	Country            int          `json:"country"`
-	CreatedAt          int          `json:"created_at"`
 	Description        string       `json:"description"`
 	Developed          []int        `json:"developed"`
 	Logo               int          `json:"logo"`
-	Name               string       `json:"name"`
 	Parent             int          `json:"parent"`
 	Published          []int        `json:"published"`
-	Slug               string       `json:"slug"`
 	StartDate          int          `json:"start_date"`
 	StartDateCategory  DateCategory `json:"start_date_category"`
-	UpdatedAt          int          `json:"updated_at"`
-	URL                string       `json:"url"`
 	Websites           []int        `json:"websites"`
 }
 
