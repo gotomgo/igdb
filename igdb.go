@@ -2,10 +2,11 @@ package igdb
 
 import (
 	"encoding/json"
-	"github.com/Henry-Sarabia/apicalypse"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/Henry-Sarabia/apicalypse"
+	"github.com/pkg/errors"
 )
 
 // igdbURL is the base URL for the IGDB API.
@@ -28,6 +29,7 @@ type Client struct {
 	key       string
 	maxLimit  int
 	maxOffset int
+	isPro     bool
 
 	// Services
 	Achievements                *AchievementService
@@ -246,4 +248,15 @@ func (c *Client) get(end endpoint, result interface{}, opts ...Option) error {
 	}
 
 	return nil
+}
+
+// GetMaxLimit returns the maximum request limit for the account type
+func (c *Client) GetMaxLimit() (result int) {
+	if c.isPro {
+		result = 3000
+	} else {
+		result = 50
+	}
+
+	return
 }
