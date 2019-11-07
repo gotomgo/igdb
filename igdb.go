@@ -255,7 +255,7 @@ func (c *Client) GetMaxLimit() (result int) {
 	if c.isPro {
 		result = 3000
 	} else {
-		result = 50
+		result = 500
 	}
 
 	return
