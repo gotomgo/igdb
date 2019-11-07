@@ -3,6 +3,8 @@ package igdb
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/pkg/errors"
 )
 
 type Pagination struct {
@@ -54,6 +56,8 @@ func (p *Pagination) Get(result interface{}) (moreItems bool, err error) {
 
 	if err = p.client.get(p.endpoint, result, options...); err == nil {
 		moreItems = p.updateTotalRead(result)
+	} else if errors.Cause(err) == ErrNoResults {
+		err = nil
 	}
 
 	return
